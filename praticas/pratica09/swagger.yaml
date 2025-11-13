@@ -1,0 +1,121 @@
+openapi: 3.0.0
+info:
+  title: API de Produtos (Pratica09)
+  description: API para gerenciamento de produtos.
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+    description: Ambiente de desenvolvimento
+tags:
+  - name: produtos
+paths:
+  /produtos:
+    get:
+      tags:
+        - produtos
+      responses:
+        '200':
+          description: Uma lista de produtos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArrayOfProdutos'
+    post:
+      tags:
+        - produtos
+      requestBody:
+        description: Um JSON com dados do novo produto
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Produto'
+      responses:
+        '201':
+          description: Produto criado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Produto'
+        '422':
+          description: Nome e preço são obrigatórios
+
+  /produtos/{produtoId}:
+    get:
+      tags:
+        - produtos
+      parameters:
+        - in: path
+          name: produtoId
+          schema:
+            type: integer
+          required: true
+          description: Id do produto a ser buscado
+      responses:
+        '200':
+          description: Um JSON com os dados do produto encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Produto'
+        '404':
+          description: Produto não encontrado  
+    put:
+      tags:
+        - produtos
+      parameters:
+        - in: path
+          name: produtoId
+          schema:
+            type: integer
+          required: true
+          description: Id do produto a ser buscado
+      requestBody:
+        description: Um JSON com dados do produto a atualizar
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Produto'
+      responses:
+        '200':
+          description: Um JSON com os dados do produto atualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Produto'
+        '404':
+          description: Produto não encontrado
+        '422':
+          description: Nome e preço são obrigatórios
+    delete:
+      tags:
+        - produtos
+      parameters:
+        - in: path
+          name: produtoId
+          schema:
+            type: integer 
+          required: true
+          description: Id do produto a ser buscado
+      responses:
+        '204':
+          description: Produto removido com sucesso
+        '404':
+          description: Produto não encontrado
+
+components:
+  schemas:
+    ArrayOfProdutos:
+      type: array
+      items:
+        $ref: '#/components/schemas/Produto'
+    Produto:
+      type: object
+      properties:
+        id:
+          type: string
+        nome:
+          type: string
+        preco:
+          type: number
